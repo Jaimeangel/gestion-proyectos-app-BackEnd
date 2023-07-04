@@ -1,8 +1,8 @@
 import express from 'express';
+import { users } from '../controllers/UsuarioController.js';
+
 const Router=express.Router();
 
-Router.get('/',(req,res)=>{
-    res.send('aqui estamos paradados en Router de usuarios again')
-})
+//Create, Register and Confirmation
 
 export default Router;
