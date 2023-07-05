@@ -1,8 +1,9 @@
 import express from 'express';
-import { users } from '../controllers/UsuarioController.js';
+import { userRegister } from '../controllers/UsuarioController.js';
 
-const Router=express.Router();
+const router=express.Router();
 
 //Create, Register and Confirmation
+router.post('/',userRegister)
 
-export default Router;
+export default router;

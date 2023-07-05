@@ -3,6 +3,7 @@ import connectDB from "./config/db.js"
 import UserRoutes from './routes/UsuarioRoutes.js'
 
 const APP = express()
+APP.use(express.json())
 const PORT = process.env.PORT || 4000;
 
 //Routing
