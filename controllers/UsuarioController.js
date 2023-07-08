@@ -1,4 +1,5 @@
 import User from "../models/Usuario.js"
+import generatorId from "../helpers/generatorId.js"
 
 const userRegister= async (req,res)=>{
     const {email}=req.body;
@@ -11,6 +12,7 @@ const userRegister= async (req,res)=>{
 
     try {
         const newUser= new User(req.body);
+        newUser.token= generatorId()
         const userRegister = await newUser.save()
         res.send({msg:'Usuario creado con exito'})
     } catch (error) {
