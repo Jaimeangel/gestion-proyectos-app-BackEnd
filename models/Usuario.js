@@ -40,7 +40,9 @@ userSchema.pre('save',async function(next){
     this.password = await bcrypt.hash(this.password,salt);
 })
 
-
+userSchema.methods.authenticatePassword= async function(passwordUserForm){
+    return await bcrypt.compare(passwordUserForm,this.password)
+}
 
 const User=mongoose.model('User',userSchema)
 

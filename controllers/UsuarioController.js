@@ -20,6 +20,38 @@ const userRegister= async (req,res)=>{
     }
 }
 
+const authenticate= async (req,res)=>{
+    const {email,password}=req.body;
+    const userExists= await User.findOne({email})
+
+    //Comprobar si el usuario existe
+    if(!userExists){
+        const errorMsg= new Error('El usuario no existe')
+        return res.status(404).json({msg:errorMsg.message})
+    }
+
+    //Comprobar si el usuario esta confirmado
+    if(!userExists.confirmado){
+        const errorMsg= new Error('El usuario no esta confirmado')
+        return res.status(403).json({msg:errorMsg.message})
+    }
+
+    if(await userExists.authenticatePassword(password)){
+        return res.status(200).json({
+            _id:userExists._id,
+            nombre:userExists.nombre,
+            email:userExists.email
+        })
+
+    }else{
+        const errorMsg= new Error('La contraseña es incorrecta')
+        return res.status(403).json({msg:errorMsg.message})
+    }
+
+
+}
+
 export {
-    userRegister
+    userRegister,
+    authenticate
 }
