@@ -13,7 +13,7 @@ const userRegister= async (req,res)=>{
 
     try {
         const newUser= new User(req.body);
-        newUser.token= generateToken(newUser._id)
+        newUser.token= generatorId()
         const userRegister = await newUser.save()
         res.send({msg:'Usuario creado con exito'})
     } catch (error) {
@@ -71,8 +71,60 @@ const userConfirmation= async (req,res)=>{
     }
 }
 
+const recoverPassword= async (req,res)=>{
+    const {email}=req.body;
+    const userExists= await User.findOne({email})
+
+    //Comprobar si el usuario existe
+    if(!userExists){
+        const errorMsg= new Error('El usuario no existe')
+        return res.status(404).json({msg:errorMsg.message})
+    }
+
+    try {
+        userExists.token=generatorId()
+        await userExists.save()
+        res.json({msg:"Hemos enviado un correo con las instrucciones par recupeara su contraseña"})
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+const verifyToken= async (req,res)=>{
+    const {token}=req.params;
+    const tokenValido = await User.findOne({token})
+
+    if(tokenValido){
+        res.json({msg:"El token es valido y el usuario existe"})
+    }else{
+        const errorMsg= new Error('El token no es valido')
+        return res.status(404).json({msg:errorMsg.message})
+    }
+}
+
+const changePassword= async (req,res)=>{
+    const {password}=req.body;
+    const {token}=req.params;
+
+    const user= await User.findOne({token})
+
+    try {
+        user.password=password
+        user.token=''
+        await user.save()
+        res.json({msg:'Su clave ha sido cambiada con exito'})
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 export {
     userRegister,
     authenticate,
-    userConfirmation
+    userConfirmation,
+    recoverPassword,
+    verifyToken,
+    changePassword
 }
