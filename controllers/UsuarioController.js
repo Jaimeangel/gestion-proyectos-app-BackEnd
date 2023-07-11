@@ -1,5 +1,6 @@
 import User from "../models/Usuario.js"
 import generatorId from "../helpers/generatorId.js"
+import { generateToken } from "../helpers/generateToken.js";
 
 const userRegister= async (req,res)=>{
     const {email}=req.body;
@@ -12,7 +13,7 @@ const userRegister= async (req,res)=>{
 
     try {
         const newUser= new User(req.body);
-        newUser.token= generatorId()
+        newUser.token= generateToken(newUser._id)
         const userRegister = await newUser.save()
         res.send({msg:'Usuario creado con exito'})
     } catch (error) {
@@ -51,7 +52,27 @@ const authenticate= async (req,res)=>{
 
 }
 
+const userConfirmation= async (req,res)=>{
+    const {token}=req.params;
+    const userConfirmed = await User.findOne({token})
+
+    if(!userConfirmed){
+        const errorMsg= new Error('Error el usuario no se ha logrado confirmar')
+        return res.status(403).json({msg:errorMsg.message})
+    }
+
+    try {
+        userConfirmed.confirmado=true
+        userConfirmed.token=''
+        await userConfirmed.save()
+        res.status(200).json({msg:"El usuario se ha confirmado con exito",})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export {
     userRegister,
-    authenticate
+    authenticate,
+    userConfirmation
 }
