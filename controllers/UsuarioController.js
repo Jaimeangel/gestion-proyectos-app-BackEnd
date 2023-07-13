@@ -14,7 +14,7 @@ const userRegister= async (req,res)=>{
     try {
         const newUser= new User(req.body);
         newUser.token= generatorId()
-        const userRegister = await newUser.save()
+        await newUser.save()
         res.send({msg:'Usuario creado con exito'})
     } catch (error) {
         console.log(error)
@@ -41,7 +41,8 @@ const authenticate= async (req,res)=>{
         return res.status(200).json({
             _id:userExists._id,
             nombre:userExists.nombre,
-            email:userExists.email
+            email:userExists.email,
+            token:generateToken(userExists._id)
         })
 
     }else{
@@ -54,17 +55,17 @@ const authenticate= async (req,res)=>{
 
 const userConfirmation= async (req,res)=>{
     const {token}=req.params;
-    const userConfirmed = await User.findOne({token})
+    const userToken = await User.findOne({token})
 
-    if(!userConfirmed){
-        const errorMsg= new Error('Error el usuario no se ha logrado confirmar')
+    if(!userToken){
+        const errorMsg= new Error('El token de confirmacion ha expirado')
         return res.status(403).json({msg:errorMsg.message})
     }
 
     try {
-        userConfirmed.confirmado=true
-        userConfirmed.token=''
-        await userConfirmed.save()
+        userToken.confirmado=true
+        userToken.token=''
+        await userToken.save()
         res.status(200).json({msg:"El usuario se ha confirmado con exito",})
     } catch (error) {
         console.log(error)
@@ -120,11 +121,17 @@ const changePassword= async (req,res)=>{
 
 }
 
+const perfil=(req,res)=>{
+    const {user}=req;
+    res.json({msg:user})
+}
+
 export {
     userRegister,
     authenticate,
     userConfirmation,
     recoverPassword,
     verifyToken,
-    changePassword
+    changePassword,
+    perfil
 }
