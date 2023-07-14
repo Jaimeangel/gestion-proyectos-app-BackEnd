@@ -15,7 +15,7 @@ const userRegister= async (req,res)=>{
         const newUser= new User(req.body);
         newUser.token= generatorId()
         await newUser.save()
-        res.send({msg:'Usuario creado con exito'})
+        res.send({msg:'Hemos enviado un correo de confirmacion para terminar tu registro'})
     } catch (error) {
         console.log(error)
     }
