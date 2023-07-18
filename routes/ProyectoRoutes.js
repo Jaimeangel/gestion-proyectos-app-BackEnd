@@ -14,7 +14,9 @@ import checkAuth from '../middlewares/checkAuth.js';
 
 const router=express.Router();
 
-
+router.post('/',checkAuth,nuevoProyecto)
+router.get('/',checkAuth,obtenerProyectos)
+router.post('/:proyecto',checkAuth,obtenerProyecto)
 
 
 export default router;
