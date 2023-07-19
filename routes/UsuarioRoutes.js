@@ -19,8 +19,10 @@ router.post('/login',authenticate)
 router.get('/confirmation/:token',userConfirmation)
 router.post('/recover-password',recoverPassword)
 
-router.get('/recover-password/:token',verifyToken)
-router.post('/recover-password/:token',changePassword)
+router
+    .route('/recover-password/:token')
+    .get(verifyToken)
+    .post(changePassword)
 
 router.get('/perfil',checkAuth,perfil)
 
