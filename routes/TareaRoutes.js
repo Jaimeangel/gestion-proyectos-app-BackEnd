@@ -1,6 +1,6 @@
 import express from 'express';
 
-export {
+import {
     crearTarea,
     editarTarea,
     eliminarTarea,
