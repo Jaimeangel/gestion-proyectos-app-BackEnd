@@ -44,7 +44,7 @@ const editarProyecto= async (req,res)=>{
         const proyectoById = await Proyecto.findById(proyecto)
 
         if(proyectoById.creador.toString() !== user._id.toString()){
-            const errorMsg= new Error('No tienes los permisos para acceder al proyecto')
+            const errorMsg= new Error('No tienes los permisos para modificar el proyecto')
             return res.status(401).json({msg:errorMsg.message})
         }
 
@@ -75,7 +75,7 @@ const eliminarProyecto= async (req,res)=>{
         const proyectoById = await Proyecto.findById(proyecto)
 
         if(proyectoById.creador.toString() !== user._id.toString()){
-            const errorMsg= new Error('No tienes los permisos para acceder al proyecto')
+            const errorMsg= new Error('No tienes los permisos para esta accion')
             return res.status(401).json({msg:errorMsg.message})
         }
 
