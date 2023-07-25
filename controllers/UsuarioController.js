@@ -1,6 +1,7 @@
 import User from "../models/Usuario.js"
 import generatorId from "../helpers/generatorId.js"
 import { generateToken } from "../helpers/generateToken.js";
+import {emailSenderConfirmAccount,emailSenderRecoverPassword } from '../helpers/email.js'
 
 const userRegister= async (req,res)=>{
     const {email}=req.body;
@@ -15,6 +16,13 @@ const userRegister= async (req,res)=>{
         const newUser= new User(req.body);
         newUser.token= generatorId()
         await newUser.save()
+
+        emailSenderConfirmAccount({
+            "nombre":newUser.nombre,
+            "email":newUser.email,
+            "token":newUser.token
+        })
+
         res.send({msg:'Hemos enviado un correo de confirmacion para terminar tu registro'})
     } catch (error) {
         console.log(error)
@@ -85,6 +93,11 @@ const recoverPassword= async (req,res)=>{
     try {
         userExists.token=generatorId()
         await userExists.save()
+        emailSenderRecoverPassword({
+            "nombre":userExists.nombre,
+            "email":userExists.email,
+            "token":userExists.token
+        })
         res.json({msg:"Hemos enviado un correo con las instrucciones par recupeara su contraseña"})
     } catch (error) {
         console.log(error)
