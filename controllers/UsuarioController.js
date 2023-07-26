@@ -74,7 +74,7 @@ const userConfirmation= async (req,res)=>{
         userToken.confirmado=true
         userToken.token=''
         await userToken.save()
-        res.status(200).json({msg:"El usuario se ha confirmado con exito",})
+        res.status(200).json(userToken)
     } catch (error) {
         console.log(error)
     }
@@ -136,7 +136,7 @@ const changePassword= async (req,res)=>{
 
 const perfil=(req,res)=>{
     const {user}=req;
-    res.json({msg:user})
+    res.json(user)
 }
 
 export {

@@ -3,7 +3,7 @@ import Proyecto from '../models/Proyecto.js'
 const obtenerProyectos= async (req,res)=>{
     const {user}=req;
     const proyectosByUser= await Proyecto.find({creador:user._id})
-    return res.json({proyectosByUser})
+    return res.json(proyectosByUser)
 }
 const nuevoProyecto= async (req,res)=>{
     const {user}=req;
@@ -12,7 +12,7 @@ const nuevoProyecto= async (req,res)=>{
 
     try {
         await proyecto.save()
-        return res.json({proyecto})
+        return res.json(proyecto)
     } catch (error) {
         const errorMsg= new Error('No fue posible crear el proyecto')
         console.log(error)
