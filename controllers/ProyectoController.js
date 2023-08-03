@@ -2,8 +2,17 @@ import Proyecto from '../models/Proyecto.js'
 
 const obtenerProyectos= async (req,res)=>{
     const {user}=req;
-    const proyectosByUser= await Proyecto.find({creador:user._id})
-    return res.json(proyectosByUser)
+    try {
+        const proyectosByUser= await Proyecto.find({creador:user._id})
+        return res.json(proyectosByUser)
+    } catch (error) {
+        console.log(error)
+        const errorMsg= new Error('No fue posible traer los proyectos')
+        return res.status(403).json({
+            msg:errorMsg.message,
+            error
+        })
+    }
 }
 const nuevoProyecto= async (req,res)=>{
     const {user}=req;
@@ -30,9 +39,9 @@ const obtenerProyecto= async (req,res)=>{
             return res.status(401).json({msg:errorMsg.message})
         }
     
-        return res.json({proyectoById})
+        return res.json(proyectoById)
     } catch (error) {
-        const errorMsg= new Error('Lo sentimos, el proyecto que trata acceder no existe')
+        const errorMsg= new Error('Lo sentimos el proyecto que trata acceder no existe')
         console.log(error)
         return res.status(404).json({msg:errorMsg.message})
     }
@@ -57,7 +66,7 @@ const editarProyecto= async (req,res)=>{
         
         try {
             await proyectoById.save()
-            res.json({msg:"Se guardaron los cambios con exito"})
+            res.json(proyectoById)
         } catch (error) {
             console.log(error)
         }

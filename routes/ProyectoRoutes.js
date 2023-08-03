@@ -21,7 +21,7 @@ router
 
 router
     .route('/:proyecto')
-    .post(checkAuth,obtenerProyecto)
+    .get(checkAuth,obtenerProyecto)
     .put(checkAuth,editarProyecto)
     .delete(checkAuth,eliminarProyecto)
 
