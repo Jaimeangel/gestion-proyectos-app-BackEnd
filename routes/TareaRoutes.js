@@ -5,7 +5,8 @@ import {
     editarTarea,
     eliminarTarea,
     obtenerTarea,
-    cambiarEstadoTarea
+    cambiarEstadoTarea,
+    getTareaByProject
 } from '../controllers/TareaController.js'
 
 import checkAuth from '../middlewares/checkAuth.js';
@@ -14,6 +15,7 @@ const router=express.Router();
 
 //Create, Register and Confirmation
 router.post('/',checkAuth,crearTarea)
+router.get('/:proyecto',checkAuth,getTareaByProject)
 
 router
     .route('/:tarea')

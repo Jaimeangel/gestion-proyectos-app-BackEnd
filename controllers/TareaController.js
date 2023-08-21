@@ -28,6 +28,34 @@ const crearTarea= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 }
+
+const getTareaByProject= async (req,res)=>{
+    const {proyecto}=req.params;
+    const {user}=req;
+
+    try {
+        const proyectExist= await Proyecto.findById(proyecto)
+
+        if(proyectExist.creador.toString() !== user._id.toString()){
+            const errorMsg= new Error('No tienes los permisos para realizar esta accion al proyecto')
+            return res.status(401).json({msg:errorMsg.message})
+        }
+
+        try {
+            const tareasByProyect= await Tarea.find({proyecto:proyecto})
+            return res.json(tareasByProyect)
+        } catch (error) {
+            const errorMsg = new Error('algo salio mal, intentalo mas tarde')
+            return res.status(404).json({msg:errorMsg.message})
+        }
+        
+    } catch (error) {
+        const errorMsg = new Error('algo salio mal,posiblemente el proyecto no exista')
+        return res.status(404).json({msg:errorMsg.message})
+    }
+
+}
+
 const editarTarea= async (req,res)=>{
     const {tarea}=req.params;
     const {user}=req;
@@ -103,6 +131,7 @@ const obtenerTarea= async (req,res)=>{
     }
 }
 
+
 const cambiarEstadoTarea=(req,res)=>{
     
 }
@@ -112,5 +141,6 @@ export{
     editarTarea,
     eliminarTarea,
     obtenerTarea,
-    cambiarEstadoTarea
+    cambiarEstadoTarea,
+    getTareaByProject
 }
