@@ -26,6 +26,12 @@ const proyectoSchema=mongoose.Schema({
             ref:'User'
         }
     ],
+    tareas:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Tarea'
+        }
+    ],
     fechaEntrega:{
         type:Date,
         default:Date.now()

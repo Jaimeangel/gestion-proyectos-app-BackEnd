@@ -17,6 +17,8 @@ const crearTarea= async (req,res)=>{
 
         try {
             await newTarea.save()
+            proyectExist.tareas.push(newTarea._id)
+            await proyectExist.save()
             return res.json(newTarea)
         } catch (error) {
             const errorMsg= new Error('Algo salio mal')
