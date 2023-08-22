@@ -27,7 +27,7 @@ const tareaSchema=mongoose.Schema({
     prioridad:{
         type:String,
         require:true,
-        enum:["baja","media","alta"]
+        enum:["Baja","Media","Alta"]
     }
 },
 { 
