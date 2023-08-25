@@ -102,15 +102,17 @@ const eliminarTarea= async (req,res)=>{
         }
 
         try {
+            await tareaExist.proyecto.tareas.pull(tarea)
+            await tareaExist.proyecto.save()
             await tareaExist.deleteOne()
             return res.json({msg:'La tarea fue eliminidad con exito'})
         } catch (error) {
-            const errorMsg= new Error('Algo salio mal')
+            const errorMsg= new Error('Algo salio mal de nuestro lado, intentalo nuevamente')
             console.log(error)
             return res.status(403).json({msg:errorMsg.message})
         }
     } catch (error) {
-        const errorMsg= new Error('Algo salio mal')
+        const errorMsg= new Error('Algo salio mal de nuestro lado, intenlo mas tarde')
         return res.status(404).json({msg:errorMsg.message})
     }
 }
