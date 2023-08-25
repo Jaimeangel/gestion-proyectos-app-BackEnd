@@ -79,7 +79,7 @@ const editarTarea= async (req,res)=>{
         
         try {
             await tareaExist.save()
-            res.json({msg:"Se guardaron los cambios con exito"})
+            res.json(tareaExist)
         } catch (error) {
             console.log(error)
         }
