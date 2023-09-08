@@ -16,6 +16,7 @@ const obtenerProyectos= async (req,res)=>{
     }
 }
 const nuevoProyecto= async (req,res)=>{
+    console.log('aqui desde NUEVO PROYECTO')
     const {user}=req;
     const proyecto= new Proyecto(req.body)
     proyecto.creador=user._id;
@@ -109,7 +110,7 @@ const buscarColaborador= async (req,res)=>{
 
     try {
         const colaborador= await User.findOne({email}).select("-confirmado -createdAt -password -token -updatedAt")
-        res.status(200).json(colaborador)
+        res.json(colaborador)
     } catch (error) {
         console.log(error)
         const errorMsg= new Error('Lo sentimos, el usuario no fue encontrado')
@@ -117,8 +118,9 @@ const buscarColaborador= async (req,res)=>{
     }
 }
 
-const agregarColaborador=()=>{
-
+const agregarColaborador= async (req,res)=>{
+    console.log('Aqui en AGREGAR COLABORADORES proyectos')
+    console.log('Estamos aqui')
 }
 const eliminarColaborador=()=>{
 

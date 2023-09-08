@@ -25,8 +25,14 @@ router
     .get(checkAuth,obtenerProyecto)
     .put(checkAuth,editarProyecto)
     .delete(checkAuth,eliminarProyecto)
+
 router
-    .route('/:proyecto/colaboradores')
+    .route('/check-colaboradores/:proyecto')
     .post(checkAuth,buscarColaborador)
+
+router
+    .route('/colaboradores/:proyecto')
+    .post(checkAuth,agregarColaborador)
+
 
 export default router;
