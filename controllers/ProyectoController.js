@@ -147,7 +147,11 @@ const agregarColaborador= async (req,res)=>{
             try {
                 await proyectoById.colaboradores.push(colaborador._id)
                 await proyectoById.save()
-                return res.status(200).json({msg:'El colaborador fue agregado al proyecto con exito'})
+                const data={
+                    nombre:colaborador.nombre,
+                    email:colaborador.email
+                }
+                return res.json(data)
             }catch(error) {
                 console.log(error)
                 const errorMsg= new Error('Lo sentimos algo salio mal')
@@ -164,6 +168,38 @@ const agregarColaborador= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 
+}
+
+const buscarColaboradoresProyecto= async (req,res)=>{
+    const {proyecto} = req.params;
+    const {user}=req;
+
+    try {
+        const proyectoById = await Proyecto.findById(proyecto).populate("colaboradores")
+    
+        if(proyectoById.creador.toString() !== user._id.toString()){
+            const errorMsg= new Error('Accion no valida')
+            return res.status(401).json({msg:errorMsg.message})
+        }
+
+        try{
+            const colaboradores = proyectoById.colaboradores.map(data => ({
+                nombre: data.nombre,
+                email: data.email
+            }));
+            return res.json(colaboradores)
+
+        }catch(error){
+            console.log(error)
+            const errorMsg= new Error('Lo sentimos algo salio mal')
+            return res.status(404).json({msg:errorMsg.message})
+        }
+        
+    }catch(error){
+        console.log(error)
+        const errorMsg= new Error('Lo sentimos, el proyecto no existe')
+        return res.status(404).json({msg:errorMsg.message})
+    }
 }
 
 const eliminarColaborador=()=>{
@@ -183,5 +219,6 @@ export {
     agregarColaborador,
     eliminarColaborador,
     obtenerTareas,
-    buscarColaborador
+    buscarColaborador,
+    buscarColaboradoresProyecto
 }
