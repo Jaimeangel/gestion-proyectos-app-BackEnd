@@ -119,12 +119,57 @@ const buscarColaborador= async (req,res)=>{
 }
 
 const agregarColaborador= async (req,res)=>{
-    console.log('Aqui en AGREGAR COLABORADORES proyectos')
-    console.log('Estamos aqui')
+    const {proyecto} = req.params;
+    const {user}=req;
+    const {emailColaborador}=req.body;
+    
+    try {
+        const proyectoById = await Proyecto.findById(proyecto)
+
+        if(proyectoById.creador.toString() !== user._id.toString()){
+            const errorMsg= new Error('Accion no valida')
+            return res.status(401).json({msg:errorMsg.message})
+        }
+
+        try{
+            const colaborador= await User.findOne({email:emailColaborador}).select("-confirmado -createdAt -password -token -updatedAt")
+            
+            if(proyectoById.creador.toString() === colaborador._id.toString()){
+                const errorMsg= new Error('El administrador del proyecto no puede incluirse dentro de los colaboradores')
+                return res.status(401).json({msg:errorMsg.message})
+            }
+
+            if(proyectoById.colaboradores.includes(colaborador._id)){
+                const errorMsg= new Error('El colaborador ya esta incluido en el proyecto')
+                return res.status(404).json({msg:errorMsg.message})
+            }
+
+            try {
+                await proyectoById.colaboradores.push(colaborador._id)
+                await proyectoById.save()
+                return res.status(200).json({msg:'El colaborador fue agregado al proyecto con exito'})
+            }catch(error) {
+                console.log(error)
+                const errorMsg= new Error('Lo sentimos algo salio mal')
+                return res.status(404).json({msg:errorMsg.message})
+            }
+        }catch(error) {
+            console.log(error)
+            const errorMsg= new Error('Lo sentimos, el usuario no fue encontrado')
+            return res.status(404).json({msg:errorMsg.message})
+        }
+    }catch(error) {
+        console.log(error)
+        const errorMsg= new Error('Lo sentimos, el proyecto no existe')
+        return res.status(404).json({msg:errorMsg.message})
+    }
+
 }
+
 const eliminarColaborador=()=>{
 
 }
+
 const obtenerTareas=()=>{
 
 }
