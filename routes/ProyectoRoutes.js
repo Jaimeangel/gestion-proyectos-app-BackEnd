@@ -7,7 +7,6 @@ import {
     eliminarProyecto,
     agregarColaborador,
     eliminarColaborador,
-    obtenerTareas,
     buscarColaborador,
     buscarColaboradoresProyecto
 } from '../controllers/ProyectoController.js'
