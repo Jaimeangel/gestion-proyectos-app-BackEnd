@@ -15,6 +15,7 @@ const obtenerProyectos= async (req,res)=>{
         })
     }
 }
+
 const nuevoProyecto= async (req,res)=>{
     console.log('aqui desde NUEVO PROYECTO')
     const {user}=req;
@@ -30,6 +31,7 @@ const nuevoProyecto= async (req,res)=>{
         return res.status(403).json({msg:errorMsg.message})
     }
 }
+
 const obtenerProyecto= async (req,res)=>{
     const {proyecto} = req.params;
     const {user}=req;
@@ -48,6 +50,7 @@ const obtenerProyecto= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 }
+
 const editarProyecto= async (req,res)=>{
     const {proyecto} = req.params;
     const {user}=req;
@@ -79,6 +82,7 @@ const editarProyecto= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 }
+
 const eliminarProyecto= async (req,res)=>{
     const {proyecto} = req.params;
     const {user}=req;
@@ -149,7 +153,8 @@ const agregarColaborador= async (req,res)=>{
                 await proyectoById.save()
                 const data={
                     nombre:colaborador.nombre,
-                    email:colaborador.email
+                    email:colaborador.email,
+                    id:colaborador._id
                 }
                 return res.json(data)
             }catch(error) {
@@ -185,7 +190,8 @@ const buscarColaboradoresProyecto= async (req,res)=>{
         try{
             const colaboradores = proyectoById.colaboradores.map(data => ({
                 nombre: data.nombre,
-                email: data.email
+                email: data.email,
+                id:data._id
             }));
             return res.json(colaboradores)
 
@@ -202,12 +208,32 @@ const buscarColaboradoresProyecto= async (req,res)=>{
     }
 }
 
-const eliminarColaborador=()=>{
+const eliminarColaborador= async (req,res)=>{
+    const {proyecto,id}=req.params;
+    const {user}=req;
 
-}
 
-const obtenerTareas=()=>{
+    try {
+        const proyectoById = await Proyecto.findById(proyecto)
 
+        if(proyectoById.creador.toString() !== user._id.toString()){
+            const errorMsg= new Error('No tienes los permisos para realizar esta accion al proyecto')
+            return res.status(401).json({msg:errorMsg.message})
+        }
+
+        try {
+            await proyectoById.colaboradores.pull(id)
+            await proyectoById.save()
+            return res.json(id)
+        }catch(error){
+            const errorMsg= new Error('Algo salio mal de nuestro lado, intentalo nuevamente')
+            console.log(error)
+            return res.status(403).json({msg:errorMsg.message})
+        }
+    }catch(error) {
+        const errorMsg= new Error('Algo salio mal de nuestro lado, intenlo mas tarde')
+        return res.status(404).json({msg:errorMsg.message})
+    }
 }
 
 export {
@@ -218,7 +244,6 @@ export {
     eliminarProyecto,
     agregarColaborador,
     eliminarColaborador,
-    obtenerTareas,
     buscarColaborador,
     buscarColaboradoresProyecto
 }

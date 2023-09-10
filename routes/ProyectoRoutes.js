@@ -36,5 +36,6 @@ router
     .post(checkAuth,agregarColaborador)
     .get(checkAuth,buscarColaboradoresProyecto)
 
+router.delete('/colaboradores/:proyecto/:id',checkAuth,eliminarColaborador)
 
 export default router;

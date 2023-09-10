@@ -89,6 +89,7 @@ const editarTarea= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 }
+
 const eliminarTarea= async (req,res)=>{
     const {tarea}=req.params;
     const {user}=req;
@@ -116,6 +117,7 @@ const eliminarTarea= async (req,res)=>{
         return res.status(404).json({msg:errorMsg.message})
     }
 }
+
 const obtenerTarea= async (req,res)=>{
     const {tarea}=req.params;
     const {user}=req;
