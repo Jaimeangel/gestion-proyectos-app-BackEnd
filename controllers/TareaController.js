@@ -36,9 +36,9 @@ const getTareaByProject= async (req,res)=>{
     const {user}=req;
 
     try {
-        const proyectExist= await Proyecto.findById(proyecto)
+        const proyectExist= await Proyecto.findById(proyecto).populate("colaboradores")
 
-        if(proyectExist.creador.toString() !== user._id.toString()){
+        if(proyectExist.creador.toString() !== user._id.toString() && !proyectExist.colaboradores.some(colaborador => colaborador._id.toString() === user._id.toString())){
             const errorMsg= new Error('No tienes los permisos para realizar esta accion al proyecto')
             return res.status(401).json({msg:errorMsg.message})
         }

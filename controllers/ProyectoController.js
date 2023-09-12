@@ -4,15 +4,17 @@ import User from '../models/Usuario.js';
 const obtenerProyectos= async (req,res)=>{
     const {user}=req;
     try {
-        const proyectosByUser= await Proyecto.find({creador:user._id})
+        const proyectosByUser= await Proyecto.find({
+            $or:[
+                { creador: {$in:user._id} }, 
+                { colaboradores: { $in: user._id } }
+            ]
+        })
         return res.json(proyectosByUser)
     } catch (error) {
         console.log(error)
         const errorMsg= new Error('No fue posible traer los proyectos')
-        return res.status(403).json({
-            msg:errorMsg.message,
-            error
-        })
+        return res.status(403).json({msg:errorMsg.message})
     }
 }
 
@@ -36,9 +38,9 @@ const obtenerProyecto= async (req,res)=>{
     const {proyecto} = req.params;
     const {user}=req;
     try {
-        const proyectoById = await Proyecto.findById(proyecto)
+        const proyectoById = await Proyecto.findById(proyecto).populate("colaboradores")   
 
-        if(proyectoById.creador.toString() !== user._id.toString()){
+        if(proyectoById.creador.toString() !== user._id.toString() && !proyectoById.colaboradores.some(colaborador => colaborador._id.toString() === user._id.toString())){
             const errorMsg= new Error('No tienes los permisos para acceder al proyecto')
             return res.status(401).json({msg:errorMsg.message})
         }
