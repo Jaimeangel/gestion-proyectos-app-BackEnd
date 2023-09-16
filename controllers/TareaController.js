@@ -138,8 +138,32 @@ const obtenerTarea= async (req,res)=>{
 }
 
 
-const cambiarEstadoTarea=(req,res)=>{
-    
+const cambiarEstadoTarea= async (req,res)=>{
+    const {tarea}=req.params;
+    const {user}=req;
+
+    try {
+        const tareaExist = await Tarea.findById(tarea).populate("proyecto")
+
+        if(tareaExist.proyecto.creador.toString() !== user._id.toString() && !tareaExist.proyecto.colaboradores.some(colaborador => colaborador._id.toString() === user._id.toString())){
+            const errorMsg= new Error('No tienes los permisos para realizar esta accion al proyecto')
+            return res.status(401).json({msg:errorMsg.message})
+        }
+
+        try {
+            tareaExist.estado = !tareaExist.estado
+            await tareaExist.save()
+            return res.json(tareaExist)
+        } catch (error) {
+            const errorMsg= new Error('Algo salio mal de nuestro lado, intentalo nuevamente')
+            console.log(error)
+            return res.status(404).json({msg:errorMsg.message})
+        }
+
+    }catch(error) {
+        const errorMsg = new Error('algo salio mal, no encontramos la tarea')
+        return res.status(404).json({msg:errorMsg.message})
+    }
 }
 
 export{

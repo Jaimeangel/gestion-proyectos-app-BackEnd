@@ -23,7 +23,7 @@ router
     .put(checkAuth,editarTarea)
     .delete(checkAuth,eliminarTarea)
 
-router.post('/estado/:tarea/',checkAuth,cambiarEstadoTarea)
+router.post('/estado/:tarea',checkAuth,cambiarEstadoTarea)
 
 
 export default router;
