@@ -28,6 +28,10 @@ const tareaSchema=mongoose.Schema({
         type:String,
         require:true,
         enum:["Baja","Media","Alta"]
+    },
+    colaborador:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     }
 },
 { 

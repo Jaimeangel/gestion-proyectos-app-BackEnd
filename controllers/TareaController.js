@@ -13,7 +13,11 @@ const crearTarea= async (req,res)=>{
             return res.status(401).json({msg:errorMsg.message})
         }
 
-        const newTarea=new Tarea(tarea)
+        const newTarea = new Tarea(tarea)
+        newTarea.populate({
+            path: "colaborador",
+            select: "-password -confirmado -token -createdAt -updatedAt"
+        })
 
         try {
             await newTarea.save()
@@ -44,7 +48,10 @@ const getTareaByProject= async (req,res)=>{
         }
 
         try {
-            const tareasByProyect= await Tarea.find({proyecto:proyecto})
+            const tareasByProyect= await Tarea.find({proyecto:proyecto}).populate({
+                path: "colaborador",
+                select: "-password -confirmado -token -createdAt -updatedAt"
+              })
             return res.json(tareasByProyect)
         } catch (error) {
             const errorMsg = new Error('algo salio mal, intentalo mas tarde')
