@@ -150,7 +150,10 @@ const cambiarEstadoTarea= async (req,res)=>{
     const {user}=req;
 
     try {
-        const tareaExist = await Tarea.findById(tarea).populate("proyecto")
+        const tareaExist = await Tarea.findById(tarea).populate("proyecto").populate({
+            path: "colaborador",
+            select: "-password -confirmado -token -createdAt -updatedAt"
+        })
 
         if(tareaExist.proyecto.creador.toString() !== user._id.toString() && !tareaExist.proyecto.colaboradores.some(colaborador => colaborador._id.toString() === user._id.toString())){
             const errorMsg= new Error('No tienes los permisos para realizar esta accion al proyecto')
