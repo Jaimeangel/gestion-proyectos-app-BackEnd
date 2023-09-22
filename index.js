@@ -45,9 +45,13 @@ const io = new Server(servidor,{
 })
 
 io.on('connection',(socket)=>{
-  //Definir los eventos de sockert.io
+  //Definir los eventos de socket.io
   socket.on("open-project-id",(proyecto)=>{
     socket.join(proyecto)
-    socket.emit('respuesta',"Usuario universal")
+  })
+
+  socket.on('new-task',(tarea)=>{
+    const proyecto = tarea.proyecto;
+    socket.to(proyecto).emit('add-tarea',tarea)
   })
 })
