@@ -28,8 +28,26 @@ APP.use('/api/proyectos',ProyectoRoutes)
 APP.use('/api/tareas',TareasRoutes)
 
 
-APP.listen(PORT,()=>{
+const servidor =  APP.listen(PORT,()=>{
     console.log(`corriendo en el puerto ${PORT}`)
 })
 
 connectDB()
+
+//Socket.io
+import { Server } from "socket.io"
+
+const io = new Server(servidor,{
+  pingTimeout:60000,
+  cors:{
+    origin:'http://localhost:5173'
+  }
+})
+
+io.on('connection',(socket)=>{
+  //Definir los eventos de sockert.io
+  socket.on("open-project-id",(proyecto)=>{
+    socket.join(proyecto)
+    socket.emit('respuesta',"Usuario universal")
+  })
+})
