@@ -64,4 +64,9 @@ io.on('connection',(socket)=>{
     const proyecto = tarea.proyecto;
     socket.to(proyecto).emit('update-tarea',tarea)
   })
+
+  socket.on('change-state-task',(tarea)=>{
+    const proyecto = tarea.proyecto._id;
+    socket.to(proyecto).emit('change-estado-tarea',tarea)
+  })
 })
