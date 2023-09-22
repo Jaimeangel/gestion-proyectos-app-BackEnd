@@ -112,8 +112,9 @@ const eliminarTarea= async (req,res)=>{
         try {
             await tareaExist.proyecto.tareas.pull(tarea)
             await tareaExist.proyecto.save()
+            res.json(tareaExist)
             await tareaExist.deleteOne()
-            return res.json({msg:'La tarea fue eliminidad con exito'})
+            return
         } catch (error) {
             const errorMsg= new Error('Algo salio mal de nuestro lado, intentalo nuevamente')
             console.log(error)
