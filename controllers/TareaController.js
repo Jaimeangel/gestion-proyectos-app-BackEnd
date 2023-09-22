@@ -51,7 +51,7 @@ const getTareaByProject= async (req,res)=>{
             const tareasByProyect= await Tarea.find({proyecto:proyecto}).populate({
                 path: "colaborador",
                 select: "-password -confirmado -token -createdAt -updatedAt"
-              })
+            })
             return res.json(tareasByProyect)
         } catch (error) {
             const errorMsg = new Error('algo salio mal, intentalo mas tarde')
@@ -86,9 +86,20 @@ const editarTarea= async (req,res)=>{
         
         try {
             await tareaExist.save()
-            res.json(tareaExist)
+            try {
+                const tareaColaborador = await Tarea.findById(tarea).populate({
+                    path: "colaborador",
+                    select: "-password -confirmado -token -createdAt -updatedAt"
+                })
+                res.json(tareaColaborador)
+            } catch (error) {
+                const errorMsg= new Error('algo salio mal')
+                return res.status(404).json({msg:errorMsg.message})
+            }
+            
         } catch (error) {
-            console.log(error)
+            const errorMsg= new Error('algo salio mal')
+            return res.status(404).json({msg:errorMsg.message})
         }
 
     } catch (error) {
