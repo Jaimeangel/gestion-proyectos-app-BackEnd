@@ -8,8 +8,8 @@ const userRegister= async (req,res)=>{
     const userExists= await User.findOne({email})
 
     if(userExists){
-        const error = new Error('Este usuario ya esta registrado')
-        return res.status(400).json({msg:error.message})
+        const error = new Error('Este email de usuario ya esta registrado, por favor ingrese otro email')
+        return res.status(409).json({msg:error.message})
     }
 
     try {
@@ -23,9 +23,10 @@ const userRegister= async (req,res)=>{
             "token":newUser.token
         })
 
-        res.send({msg:'Hemos enviado un correo de confirmacion para terminar tu registro'})
+        res.send({msg:'Revisa tu correo, hemos enviado un correo de confirmacion para terminar tu registro'})
     } catch (error) {
-        console.log(error)
+        const errorMsg= new Error('algo salio mal de nuestro lado, intentalo de nuevo o mas tarde')
+        return res.status(503).json({msg:errorMsg.message})
     }
 }
 

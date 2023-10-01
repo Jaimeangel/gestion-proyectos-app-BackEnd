@@ -19,7 +19,6 @@ const obtenerProyectos= async (req,res)=>{
 }
 
 const nuevoProyecto= async (req,res)=>{
-    console.log('aqui desde NUEVO PROYECTO')
     const {user}=req;
     const proyecto= new Proyecto(req.body)
     proyecto.creador=user._id;

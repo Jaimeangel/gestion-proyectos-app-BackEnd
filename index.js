@@ -1,15 +1,17 @@
 import express from "express"
 import connectDB from "./config/db.js"
+//Routes models
 import UserRoutes from './routes/UsuarioRoutes.js'
 import ProyectoRoutes from './routes/ProyectoRoutes.js'
 import TareasRoutes from './routes/TareaRoutes.js'
+
 import cors from 'cors'
 
 const APP = express()
 APP.use(express.json())
 const PORT = process.env.PORT || 4000;
 
-const whitelist = ['http://localhost:5173']
+const whitelist = ['http://localhost:5173','http://localhost:5174']
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.includes(origin)) {

@@ -13,8 +13,8 @@ const emailSenderConfirmAccount= async (datos)=>{
     });
 
     const infoEmail = await transport.sendMail({
-        from:"Backend de Jaime Angel",
-        to:"jaimeangel1097@gmail.com",
+        from:"Mensaje automatico confirma tu cuenta",
+        to:email,
         subject:"Confirma tu cuenta",
         text:`${nombre} comprueba tu cuenta para seguir disfrutando de los beneficios`,
         html:`
@@ -37,8 +37,6 @@ const emailSenderConfirmAccount= async (datos)=>{
     })
 
 }
-
-
 const emailSenderRecoverPassword= async (datos)=>{
     const {nombre,email,token}=datos;
 
@@ -53,7 +51,7 @@ const emailSenderRecoverPassword= async (datos)=>{
 
     const infoEmail = await transport.sendMail({
         from:"Backend de Jaime Angel",
-        to:"jaimeangel1097@gmail.com",
+        to:email,
         subject:"Restablecer contraseña",
         text:`${nombre} Aqui puedes cambiar tu contraseña`,
         html:`
